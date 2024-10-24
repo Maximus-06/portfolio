@@ -1,9 +1,3 @@
-
-
-
-
-
-
 Esimerkki tekemästäni pelistä c++ kielellä: 
 #include <iostream>
 #include <random>
