@@ -1,0 +1,394 @@
+#Ratkaisuni Datatähti-valmennus "Kertoma" tehtävään:
+#include <iostream>
+ 
+using namespace std;
+long long n;
+int runThrough(long long n) {
+    int zeroCount = 0;
+    for (int i = 5; n / i > 0; i *= 5) {
+        zeroCount += n / i;
+    }
+    return zeroCount;
+}
+ 
+ 
+int main() {
+	cin >> n;
+	cout << runThrough(n);
+	cout << endl << endl << endl;
+ 
+	return 0;
+}
+
+#Ratkaisuni Datatähti-valmennus "Spiraali" tehtävään:
+#include <iostream>
+
+using namespace std;
+
+typedef long long ll;
+
+int y, x;
+
+int main() {
+    cin >> y >> x;
+    int v = max(y,x);
+    ll u = (ll)(v-1)*(v-1);
+    if (v%2 == 0) {
+        if (x == v) u += y;
+        else u += v+(v-x);
+    } else {
+        if (y == v) u += x;
+        else u += v+(v-y);
+    }
+    cout << u << "\n";
+}
+
+#Ratkaisuni Datatähti-valmennus "Ratsut" tehtävään:
+#include <iostream>
+using namespace std;
+ 
+int main() {
+    int n;
+    cin >> n;
+    switch (n)
+    {
+    default:
+        break;
+    case 0:
+        cout << 0;
+        return 0;
+    case 1:
+        cout << 0;
+        return 0;
+    case 2:
+        cout << 6;
+        return 0;
+    case 3:
+        cout << 28;
+        return 0;
+    }
+    long long ways = 0;
+    ways = (long long)n * n * (n * n - 1) / 2 - 4 * (n - 1) * (n - 2);
+    
+ 
+    cout << ways;
+ 
+    return 0;
+
+#Ratkaisuni Datatähti-valmennus "Ravintola" tehtävään:
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int n;
+vector<pair<int,int>> v;
+int c, p;
+
+int main() {
+    cin >> n;
+    for (int i = 0; i < n; i++) {
+        int a, b;
+        cin >> a >> b;
+        v.push_back({a,1});
+        v.push_back({b,-1});
+    }
+    sort(v.begin(), v.end());
+    for (int i = 0; i < v.size(); i++) {
+        c += v[i].second;
+        p = max(p,c);
+    }
+    cout << p << "\n";
+}
+#Ratkaisuni Datatähti-valmennus "Asunnot" tehtävään:
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int n, m, k;
+vector<int> v1, v2;
+
+int main() {
+    cin >> n >> m >> k;
+    v1.resize(n);
+    for (int i = 0; i < n; i++) cin >> v1[i];
+    sort(v1.begin(), v1.end());
+    v2.resize(m);
+    for (int i = 0; i < m; i++) cin >> v2[i];
+    sort(v2.begin(), v2.end());
+    int j = 0;
+    int c = 0;
+    for (int i = 0; i < v1.size(); i++) {
+        while (j < v2.size() && v2[j] < v1[i]-k) j++;
+        if (j == v2.size()) break;
+        if (v2[j] >= v1[i]-k && v2[j] <= v1[i]+k) {
+            j++; c++;
+        }
+        if (j == v2.size()) break;
+    }
+    cout << c << "\n";
+}
+#Ratkaisuni Datatähti-valmennus "Huvipuisto" tehtävään:
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+typedef long long ll;
+ 
+ 
+ 
+int main() {
+	ll n, m, korit; //x=lasten määrä, m=maksimipainoraja
+	ll parit = 0;
+	cin >> n >> m;
+ 
+	vector<ll> weights;
+	weights.resize(n);
+ 
+	for (int i=0; i<n; i++) {
+		cin >> weights[i];
+	}
+	sort(weights.begin(), weights.end());
+ 
+	for (int i = 0, j=n-1; i < j;) {
+		if (weights[i] + weights[j] <= m) {
+			parit++;
+			i++;
+			j--;
+		}
+		else {
+			j--;
+		}
+		
+		
+	}
+	cout << n - parit;
+	return 0;
+}
+#Ratkaisuni Datatähti-valmennus "Tehdas" tehtävään:
+#include <iostream>
+
+using namespace std;
+
+typedef long long ll;
+
+int n, m;
+int a[101010];
+
+bool ok(ll t) {
+    ll u = 0;
+    for (int i = 0; i < n; i++) {
+        u += t/a[i];
+        if (u >= m) return true;
+    }
+    return false;
+}
+
+int main() {
+    cin >> n >> m;
+    for (int i = 0; i < n; i++) cin >> a[i];
+    ll t = 0;
+    for (ll b = 1e15; b >= 1; b /= 2) {
+        while (!ok(t+b)) t += b;
+    }
+    cout << t+1 << "\n";
+}
+
+#Ratkaisuni Datatähti-valmennus "Järjestys" tehtävään:
+#include <iostream>
+
+using namespace std;
+
+int n;
+int x[101010];
+
+int main() {
+    cin >> n;
+    for (int i = 1; i <= n; i++) cin >> x[i];
+    int u = n;
+    for (int i = n; i >= 1; i--) {
+        if (x[i] == u) u--;
+    }
+    cout << u << "\n";
+}
+#Ratkaisuni Datatähti-valmennus "Ositus" tehtävään:
+#include <iostream>
+#include <algorithm>
+#include <vector>
+using namespace std;
+ 
+int main()
+{
+    long long n, k, maximum, summa, usedSplits, maxSum;
+    maxSum = 0;
+    usedSplits = 0;
+    maximum = 0;
+    cin >> n >> k;
+    vector<long long> input(n);
+    for (int i = 0; i < n; i++) {
+        cin >> input[i];
+        maximum = max(maximum, input[i]);
+    }
+    long long begin, ending, mid;
+    begin = maximum;
+    ending = 2e5 * 1e9;
+    while(begin < ending) {
+        mid = (begin + ending) / 2;
+        summa = 0;
+        maxSum = 0;
+        usedSplits = 1;
+        for (int x = 0; x < n; x++) {
+            if (summa + input[x] > mid) {
+                usedSplits += 1;
+                summa = 0;
+            }
+            summa += input[x];
+ 
+ 
+            maxSum = max(maxSum, summa);
+        }
+ 
+        if (usedSplits > k) {
+            begin = mid+1;
+        }
+        else {
+            ending = mid;
+        }
+    }
+    cout << ending;
+}
+#Ratkaisuni Datatähti-valmennus "Taulukko" tehtävään:
+#include <iostream>
+#include <set>
+
+using namespace std;
+
+int n;
+set<int> s;
+
+int main() {
+    cin >> n;
+    for (int i = 0; i < n; i++) {
+        int x;
+        cin >> x;
+        s.insert(x);
+    }
+    cout << s.size() << "\n";
+}
+#Ratkaisuni Datatähti-valmennus "Navetta" tehtävään:
+#include <iostream>
+#include <set>
+
+using namespace std;
+
+set<int> s;
+int n, m;
+
+int main() {
+    cin >> n >> m;
+    for (int i = 0; i < m; i++) {
+        char t;
+        int x;
+        cin >> t >> x;
+        if (t == '+') s.insert(x);
+        if (t == '-') s.erase(x);
+        if (t == '?') {
+            if (s.count(x)) cout << "10-4\n";
+            else cout << "QAQ\n";
+        }
+    }
+}
+#Ratkaisuni Datatähti-valmennus "Iltalypsy" tehtävään:
+#include <iostream>
+#include <set>
+
+using namespace std;
+
+int n, m;
+set<int> s;
+int k;
+
+int main() {
+    cin >> n >> m;
+    k = 1;
+    for (int i = 0; i < m; i++) {
+        int x;
+        cin >> x;
+        s.insert(x);
+        while (s.count(k)) k++;
+        cout << k << " ";
+    }
+    cout << "\n";
+}
+#Ratkaisuni Datatähti-valmennus "Konsertti" tehtävään:
+#include <iostream>
+#include <set>
+
+using namespace std;
+
+int n, m;
+multiset<int> s;
+
+int main() {
+    cin >> n >> m;
+    for (int i = 1; i <= n; i++) {
+        int x;
+        cin >> x;
+        s.insert(x);
+    }
+    for (int i = 1; i <= m; i++) {
+        int x;
+        cin >> x;
+        auto it = s.upper_bound(x);
+        if (it == s.begin()) {
+            cout << "QAQ\n";
+            continue;
+        }
+        it--;
+        cout << *it << "\n";
+        s.erase(it);
+    }
+}
+#Ratkaisuni Datatähti-valmennus "Tikku" tehtävään:
+#include <iostream>
+#include <set>
+using namespace std;
+ 
+int main() {
+    long long x, n, temp, longestLength, lit, lnit;
+    cin >> x >> n;
+ 
+    set<long long> cuts;
+    cuts.insert(0);
+    cuts.insert(x);
+ 
+    longestLength = x;
+    lit = 0;
+    lnit = x;
+ 
+    for (long long i = 0; i < n; i++) {
+        cin >> temp;
+        cuts.insert(temp);
+ 
+        if (temp >= lit && temp <= lnit) {
+            auto it = cuts.lower_bound(lit);
+ 
+            if (it != cuts.end()) {
+                lnit = *it;
+ 
+                if (it != cuts.begin()) {
+                    it--;
+                    lit = *it;
+                    longestLength = max(longestLength, lnit - lit);
+                }
+            }
+        }
+ 
+        cout << longestLength << " ";
+    }
+ 
+    return 0;
+}
