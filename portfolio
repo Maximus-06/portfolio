@@ -1,0 +1,299 @@
+
+
+
+
+
+
+Esimerkki tekemästäni pelistä c++ kielellä: 
+#include <iostream>
+#include <random>
+#include <time.h>
+#include <string>
+#include <array>
+#include <vector>
+#include <Windows.h>
+using namespace std;
+
+//For attack sentence generation
+//Sander Ravenously kicked Oliver in the leg
+// atkr  adjective  verb   target targetPart
+string sloppyAdjective[] = {"Sloppily", "Weakly", "Foolishly", "Unsystematically", "Amateurishly", "Unprofessionally"};
+string basicAdjective[] = {"Casually", "Meticulously", "Adequately", "Requisitely", "Sufficently", "Strategically", "Decisively", "Hurtfully", "Methodically"};
+string criticalAdjective[] = {"Utterly", "Voraciously ","Ravenously","Ferociously", "Vigorously", "Menacingly", "Savagely", "Sadistically", "Ruthlessly", "Diabolically", ""};
+
+
+string attackVerb[] = { "Bit", "Kicked", "Attacked", "Punched", "Hit", "Headbutted", "Dropkicked", "Scratched", "Hurt"};
+string attackVerbCritical[] = {"Ripped Out", "Manually removed", "Extirpated", "Disintegrated", "Mauled", "Mangled", "Obliterated", "Annihilated", "disfigured"};
+
+string parts[] = {" in the Head", " in the Leg", " in the Stomach", " in the Chest", " in the Arm", " in the Neck", " in between the legs", "'s toes", " in the Face", " in the Jaw"};
+string partsCrit[] = { "'s Teeth", "'s Ribcage", "'s Jaw", "'s Toes", "'s Face", "'s Nose", "'s Spine"};
+
+string pain[] = {"fell to the ground in pain, clutching the injured bodypart", "Collapsed under the excruciating pain, as their strength gave away", "roared in despair", "Yelled in agony, as the pain bore down on his perseverance", 
+"coughed a pile of blood on the ground", "felt a wave of despair wash over, as the pain kicked in",
+"fell on his back, for the intensity of the attack was too much to bear.", "Collapsed on his knees, roared in distress, their voice a raw expression of shattered willpower", 
+"Crumbled down, in their struggle against the pain and let out a sigh of despondency"};
+string midPain[] = { "thudded from the impact", "Grunted from the attack", "gave an angry look", "Smiled as his nose started to bleed", "groaned a little"};
+string noPain[] = {"shook it off", "laughed", "called the attack weak", "was amused", "didn't react"};
+
+
+//make string vector array and a function that includes it thanks to gpt
+string setText(const string& name) {
+vector<string> victoryTexts = {
+"With a triumphant roar, " + name + " stood victorious amidst the battlefield's chaos, their unwavering resolve earning them the spoils of victory",
+
+"The dust settled, revealing " + name + " as the lone victor, their indomitable determination carving a path to glory through his fallen adversaries",
+
+"Amidst the echoes of the battlefield, " + name + " emerged as the prevailing force, their skill and valor unmatched on the battlefield.",
+
+"As the smoke cleared, " + name + " stood tall, the battlefield strewn with the defeated, and a testament to their strategic brilliance and unyielding fortitude.",
+
+"With a final, decisive blow, " + name + " secured their victory, a show of their unwavering prowess.",
+
+"As " + name + " realized he was the winner of the fight, he began a manic laughter episode."
+};
+
+int giveThisText = rand() % victoryTexts.size();
+return victoryTexts[giveThisText];
+}
+
+string setDeathText(const string& name) {
+    vector<string> deathTexts = {
+    "The blow delivered to " + name + " caused him to spontaneously collapse. And a pile of blood emerged from beneath his lifeless mutilated remains.",
+    "The events of the battlefield scourged " + name + " so terribly that when he was trying to make a counterattack he collapsed, hit his head on a stone and died.",
+    "The attack on " + name + " caused so much pain that he fell to the ground and rested there whimpering in pain, all up until "+ name + " died from blood loss",
+    "The attack rendered " + name + " blind and incapacitated him for the rest of the fight. ",
+    "As the attack hit " + name + " he instantly went limp and fell to the ground where he never moved a muscle",
+    "As the blow hit " + name + " He promptly laughed and somehow managed to escape the battle arena, never to be seen again...",
+    name + " Crumbled to the ground from the force of the attack, where he stayed for the rest of the fight and bled to death",
+    name + "Stated calmly how he was 'FUCKING INVINCIBLE' and started running towards his agressor, who reacted by caving" + name+ "'s skull in, with a roundhouse kick"
+    };
+
+    int giveThisText = rand() % deathTexts.size();
+    return deathTexts[giveThisText];
+}
+enum Color {
+    w = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE,   // Foreground: White
+    r = FOREGROUND_RED,     // Foreground: Red
+    g = FOREGROUND_GREEN,   // Foreground: Green
+    b = FOREGROUND_BLUE,     // Foregroung: Blue
+    c = FOREGROUND_BLUE | FOREGROUND_GREEN, // Foregroung: Cyan
+    y = FOREGROUND_GREEN | FOREGROUND_RED //yellow
+};
+//Color change function
+void Col(Color col) {
+    static HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute(hConsole, col);
+}
+//Coutcol for string
+void coutCol(const string& text, Color col) {
+    Col(col);
+    cout << text;
+    Col(w);
+}
+//Coutcol overload for float
+void coutCol(float text, Color col) {
+    Col(col);
+    cout << text;
+    Col(w);
+}
+
+/**/
+class fighter {
+public: 
+    string name = "Default";
+    int health = 0;
+    int strength = 0;
+    void initializeId() {
+        cout << endl << "Give Fighter name: ";
+        cin.ignore(0, '\n');
+        getline(cin, name);
+
+        health = rand() % 100 + 91; // generate health between 70-170 
+        strength = rand() % 11 + 5 ; // generate strength between 5-16 (50%-150% multiplier for attacks)
+        if (name == "Oliver" || name == "oliver") { //hehe 
+            strength += 4;
+            health += 20;
+        }
+        else if (name == "Einar" || name == "einar") //only realistic 
+        {
+            strength += 42;
+            health = 420;
+        }
+    }
+    void ascertainId() {
+        cout << "Name: " << name << endl;
+        cout << "Hp: ";
+        coutCol(health, g);
+        cout << endl;
+        cout << "Strn: ";
+        coutCol(strength, c);
+        cout << endl;
+    }
+
+    int generateDamage() {
+        int damage;
+        damage = rand() % 30 + 1; // generate damage between 1-30
+        damage *= strength * 0.1; // multiply it by 0,5-1,5 which is derived from strength
+
+        return damage;
+    }
+    void applyDamage(int damage) {
+        health -= damage;
+    }
+};
+
+int strNum(int sizeInBytes) 
+{
+    int i = rand() % sizeInBytes / sizeof(string);
+    return i;
+}
+
+int geneRateTarget(int self) {
+    for (;;) {
+        int i = rand() % 4;
+        if (i != self) {
+            return i;
+        }
+    }
+}
+void input(string text = "Continue...") {
+    cout << text;
+    int useless = cin.get();
+}
+
+
+
+
+void generateSentence(fighter attacker, fighter receiver, int dmg) 
+{
+    string adjective = "adj";
+    string verb = "verb";
+    string part = "part";
+    string reaction = "reaction";
+    //Damage tiers weak: 1-10, mid: 11-23, strong 24+
+    //Sentence 1: x adjective attacks y in the part. Dealing X-damage
+    //Sentence 2: y reaction
+
+    if (dmg > 24) {  //attack is strong 
+        adjective = criticalAdjective[strNum(sizeof(criticalAdjective))];
+        verb = attackVerbCritical[strNum(sizeof(attackVerbCritical))];
+        part = partsCrit[strNum(sizeof(partsCrit))];
+        reaction = pain[strNum(sizeof(pain))];
+    } 
+    else 
+    {
+        part = parts[strNum(sizeof(parts))];
+        verb = attackVerb[strNum(sizeof(attackVerb))];
+        if (dmg<10) //attack is of mild strength
+        {
+            adjective = sloppyAdjective[strNum(sizeof(sloppyAdjective))];
+            reaction = noPain[strNum(sizeof(noPain))];
+        }
+        else //attack is weak
+        {
+            adjective = basicAdjective[strNum(sizeof(basicAdjective))];
+            reaction = midPain[strNum(sizeof(midPain))];
+        }
+    }
+
+    //Attack sentence
+    
+    cout << endl << attacker.name <<" "<< adjective << " " << verb << " " << receiver.name << part << " Dealing ";
+    coutCol(dmg, r);
+    cout << " Damage " << endl;
+    //Reaction sentence
+    cout << receiver.name << " " << reaction << endl;
+    //Technical Summary
+
+    cout << receiver.name << " health: " << receiver.health + dmg << " - " << dmg << " = "; //print "Person x health: "
+    coutCol(receiver.health, g);
+    cout << endl << endl;
+    
+}
+//Color enums
+
+
+
+
+int main()
+{
+    //Start codde --------------
+
+    system("cls");
+    //br game
+    srand(time(NULL));
+    cout << "Give 4 fighters with their names: " << endl << endl;
+    fighter combattan[4];
+    for (int i = 0; i < 4; i++) {
+        combattan[i].initializeId();
+    }
+    system("cls");
+    for (int i = 0; i < 4; i++) {
+        //cout << "Figther: " << i + 1 << endl;
+        combattan[i].ascertainId();
+        cout << endl << endl;
+    }
+    input();
+    //End of start codde   --------------
+    
+
+    //Some variables before the battle begins
+    cout << endl << "LET THE FIGHT COMMENCE" << endl;
+    bool lifeState[4] = { 1,1,1,1 };
+    int target;
+    int wainner;
+    int aliveCount = 4;
+    //The fight itself
+    for (int i = 0; i < 20; i++) {
+        system("cls");
+        cout << "Round: " << i + 1 << endl;
+        cout << "There are " << aliveCount << " fighters left" << endl << endl;
+        for (int atkr = 0; atkr < sizeof(lifeState) / sizeof(bool); atkr++) { //cycle through attackers and then check if they're alive
+            if (lifeState[atkr] == 1) //check if the attacker is alive 
+            {
+                for (;;) //bad code over here (had to hurry so i made this stupido loop)
+                {
+                    target = geneRateTarget(atkr); //generate target with int generator
+                    if (lifeState[target] != 0) {
+                        break;
+                    }
+                }
+
+                int dmg = combattan[atkr].generateDamage();  //generate dmg by using generatedamage method inside the atkr
+                combattan[target].applyDamage(dmg); // apply generated damage to the figther with the target int
+                generateSentence(combattan[atkr], combattan[target], dmg); // generate sentence
+                
+                if (combattan[target].health <= 0) { //set players with below 0 hp to be dead
+                    lifeState[target] = 0; //set pos in array to 0
+                    cout << endl;
+                    coutCol(setDeathText(combattan[target].name),r);
+                    cout << endl;
+                }
+
+                input();
+                
+            }
+
+            aliveCount = 0;
+            for (int i = 0; i < sizeof(lifeState) / sizeof(bool); i++)
+            {
+                aliveCount = aliveCount + lifeState[i];
+            }
+            if (aliveCount == 1) { //Check whether 1 is left:
+                //find winner bad code once again
+                for (int i = 0; i < sizeof(lifeState) / sizeof(bool); i++) {
+
+                    if (lifeState[i] == 1) {
+                        wainner = i;
+                    }
+                }
+                system("cls");
+                coutCol(setText(combattan[wainner].name), y);
+                cout << endl;
+                input("Press any key to end...");
+                return 0;
+            }
+            
+        }
+    }
+}
